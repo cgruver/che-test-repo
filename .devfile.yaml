@@ -1,0 +1,73 @@
+schemaVersion: 2.2.0
+attributes:
+  controller.devfile.io/storage-type: per-workspace
+metadata:
+  name: che-test-workspace
+components:
+- name: dev-tools
+  container: 
+    image: image-registry.openshift-image-registry.svc:5000/eclipse-che-images/quarkus:latest
+    memoryLimit: 6Gi
+    mountSources: true
+    volumeMounts:
+    - name: m2
+      path: /home/user/.m2
+- container:
+    args:
+      - '-f'
+      - /dev/null
+    command:
+      - tail
+    image: registry.access.redhat.com/ubi9/ubi-minimal
+    memoryLimit: 64M
+    mountSources: true
+    sourceMapping: /projects
+  name: quarkus-native-runner
+- volume:
+    size: 4Gi
+  name: projects
+- volume:
+    size: 2Gi
+  name: m2
+commands:
+- exec:
+    commandLine: mvn package
+    component: dev-tools
+    group:
+      isDefault: true
+      kind: build
+    workingDir: '${PROJECT_SOURCE}'
+  id: package
+- exec:
+    commandLine: mvn package -Dnative -Dmaven.test.skip -Dquarkus.native.native-image-xmx=2G
+    component: dev-tools
+    group:
+      kind: build
+    label: Package Native
+    workingDir: '${PROJECT_SOURCE}'
+  id: package-native
+- exec:
+    commandLine: 'mvn compile quarkus:dev'
+    component: dev-tools
+    group:
+      isDefault: true
+      kind: run
+    label: Start Development mode (Hot reload + debug)
+    workingDir: '${PROJECT_SOURCE}'
+  id: start-dev
+- exec:
+    commandLine: ./code-with-quarkus-1.0.0-SNAPSHOT-runner
+    component: ubi-minimal
+    group:
+      kind: run
+    label: Start Native
+    workingDir: '${PROJECT_SOURCE}/target'
+  id: start-native
+- exec:
+    commandLine: /bin/bash
+    component: ubi-minimal
+    group:
+      kind: run
+    label: Start Native
+    workingDir: '${PROJECT_SOURCE}/target'
+  id: ubi-terminal

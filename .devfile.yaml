@@ -68,6 +68,6 @@ commands:
     component: ubi-minimal
     group:
       kind: run
-    label: Start Native
+    label: UBI Terminal
     workingDir: '${PROJECT_SOURCE}/target'
   id: ubi-terminal

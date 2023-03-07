@@ -64,7 +64,7 @@ commands:
     workingDir: '${PROJECT_SOURCE}/target'
   id: start-native
 - exec:
-    commandLine: "POD=$(oc get pod controller.devfile.io/devworkspace_name=che-test-workspace -o name) ; oc rsh ${POD}"
+    commandLine: "POD=$(oc get pod --selector controller.devfile.io/devworkspace_name=che-test-workspace -o name) ; oc rsh -c ubi-minimal ${POD}"
     component: dev-tools
     group:
       kind: run

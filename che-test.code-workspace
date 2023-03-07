@@ -13,7 +13,8 @@
 			"mhutchie.git-graph",
 			"eamodio.gitlens",
 			"streetsidesoftware.code-spell-checker",
-			"johnpapa.winteriscoming"
+			"johnpapa.winteriscoming",
+			"cnshenj.vscode-task-manager"
 		]
 	},
 	"settings": {

@@ -63,3 +63,11 @@ commands:
     label: Start Native
     workingDir: '${PROJECT_SOURCE}/target'
   id: start-native
+- exec:
+    commandLine: "POD=$(oc get pod controller.devfile.io/devworkspace_name=che-test-workspace -o name) ; oc rsh ${POD}"
+    component: dev-tools
+    group:
+      kind: run
+    label: UBI Shell
+    workingDir: '${PROJECT_SOURCE}/target'
+  id: ubi-shell

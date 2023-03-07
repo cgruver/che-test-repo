@@ -86,7 +86,7 @@ commands:
     component: dev-tools
     group:
       kind: run
-    label: UBI Shell
+    label: Terminal - Quarkus Native UBI
     workingDir: '${PROJECT_SOURCE}'
   id: ubi-shell
 - exec:
@@ -94,6 +94,6 @@ commands:
     component: dev-tools
     group:
       kind: run
-    label: PostgreSQL Shell
+    label: Terminal - PostgreSQL
     workingDir: '${PROJECT_SOURCE}'
   id: postgres-shell

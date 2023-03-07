@@ -12,7 +12,8 @@ components:
     volumeMounts:
     - name: m2
       path: /home/user/.m2
-- container:
+- name: quarkus-native-runner
+  container:
     args:
       - '-f'
       - /dev/null
@@ -22,13 +23,30 @@ components:
     memoryLimit: 64M
     mountSources: true
     sourceMapping: /projects
-  name: quarkus-native-runner
+- name: postgres
+  container:
+    image: quay.io/sclorg/postgresql-15-c9s:c9s
+    memoryLimit: 512M
+    sourceMapping: /projects
+    env:
+    - name: POSTGRESQL_USER
+      value: postgres
+    - name: POSTGRESQL_PASSWORD
+      value: postgres
+    - name: POSTGRESQL_DATABASE
+      value: postgres
+    volumeMounts:
+    - name: pgdata
+      path: /var/lib/pgsql/data
 - volume:
     size: 4Gi
   name: projects
 - volume:
     size: 2Gi
   name: m2
+- volume:
+    size: 2Gi
+  name: pgdata
 commands:
 - exec:
     commandLine: mvn package
@@ -71,3 +89,11 @@ commands:
     label: UBI Shell
     workingDir: '${PROJECT_SOURCE}'
   id: ubi-shell
+- exec:
+    commandLine: "POD=$(oc get pod --selector controller.devfile.io/devworkspace_name=che-test-workspace -o name) ; oc rsh -c postgres ${POD}"
+    component: dev-tools
+    group:
+      kind: run
+    label: PostgreSQL Shell
+    workingDir: '${PROJECT_SOURCE}'
+  id: postgres-shell

@@ -63,11 +63,3 @@ commands:
     label: Start Native
     workingDir: '${PROJECT_SOURCE}/target'
   id: start-native
-- exec:
-    commandLine: /bin/bash
-    component: ubi-minimal
-    group:
-      kind: run
-    label: UBI Terminal
-    workingDir: '${PROJECT_SOURCE}/target'
-  id: ubi-terminal

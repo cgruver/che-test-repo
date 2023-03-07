@@ -56,18 +56,18 @@ commands:
     workingDir: '${PROJECT_SOURCE}'
   id: start-dev
 - exec:
-    commandLine: ./code-with-quarkus-1.0.0-SNAPSHOT-runner
-    component: ubi-minimal
+    commandLine: ./target/code-with-quarkus-1.0.0-SNAPSHOT-runner
+    component: quarkus-native-runner
     group:
       kind: run
     label: Start Native
-    workingDir: '${PROJECT_SOURCE}/target'
+    workingDir: '${PROJECT_SOURCE}'
   id: start-native
 - exec:
-    commandLine: "POD=$(oc get pod --selector controller.devfile.io/devworkspace_name=che-test-workspace -o name) ; oc rsh -c ubi-minimal ${POD}"
+    commandLine: "POD=$(oc get pod --selector controller.devfile.io/devworkspace_name=che-test-workspace -o name) ; oc rsh -c quarkus-native-runner ${POD}"
     component: dev-tools
     group:
       kind: run
     label: UBI Shell
-    workingDir: '${PROJECT_SOURCE}/target'
+    workingDir: '${PROJECT_SOURCE}'
   id: ubi-shell

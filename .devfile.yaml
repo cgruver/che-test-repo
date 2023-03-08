@@ -9,6 +9,14 @@ components:
     image: image-registry.openshift-image-registry.svc:5000/eclipse-che-images/quarkus:latest
     memoryLimit: 6Gi
     mountSources: true
+    sourceMapping: /projects
+    env:
+    - name: TESTCONTAINERS_RYUK_DISABLED
+      value: "true"
+    - name: TESTCONTAINERS_CHECKS_DISABLE
+      value: "true"
+    - name: DOCKER_HOST
+      value: tcp://127.0.0.1:2475
     volumeMounts:
     - name: m2
       path: /home/user/.m2
@@ -28,6 +36,7 @@ components:
     image: quay.io/sclorg/postgresql-15-c9s:c9s
     memoryLimit: 512M
     sourceMapping: /projects
+    mountSources: true
     env:
     - name: POSTGRESQL_USER
       value: postgres
@@ -97,3 +106,11 @@ commands:
     label: Terminal - PostgreSQL
     workingDir: '${PROJECT_SOURCE}'
   id: postgres-shell
+- exec:
+    commandLine: "kubedock server --port-forward"
+    component: dev-tools
+    group:
+      kind: run
+    label: Kubedock
+    workingDir: '${PROJECT_SOURCE}'
+  id: kubedock

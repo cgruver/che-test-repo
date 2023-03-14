@@ -116,6 +116,4 @@ commands:
     label: Kubedock
     workingDir: '${PROJECT_SOURCE}'
   id: kubedock
-events:
-   postStart:
-     - kubedock
+

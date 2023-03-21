@@ -7,7 +7,10 @@ components:
 - name: dev-tools
   container: 
     image: image-registry.openshift-image-registry.svc:5000/eclipse-che-images/quarkus:latest
+    memoryRequest: 1Gi
     memoryLimit: 6Gi
+    cpuRequest: 500m
+    cpuLimit: 2000m
     mountSources: true
     sourceMapping: /projects
     env:

@@ -1,0 +1,15 @@
+kind: Secret
+apiVersion: v1
+metadata:
+  name: personal-access-token-${CHE_USER}
+  labels:
+    app.kubernetes.io/component: scm-personal-access-token
+    app.kubernetes.io/part-of: che.eclipse.org
+  annotations:
+    che.eclipse.org/che-userid: ${CHE_USER}
+    che.eclipse.org/scm-personal-access-token-name: github
+    che.eclipse.org/scm-url: https://github.com
+    che.eclipse.org/scm-userid: ${GIT_USER}
+data:
+  token: ${GIT_TOKEN}
+type: Opaque

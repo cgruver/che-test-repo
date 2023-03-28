@@ -13,6 +13,11 @@ components:
     cpuLimit: 2000m
     mountSources: true
     sourceMapping: /projects
+    args:
+      - '-f'
+      - /dev/null
+    command:
+      - tail
     env:
     - name: SHELL
       value: "/bin/zsh"

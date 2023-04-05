@@ -24,3 +24,94 @@ chectl server:delete -y --delete-all --delete-namespace
 oc import-image che-plugin-registry:1.58.X --from=quay.io/cgruver0/che/che-plugin-registry:1.58.X --confirm -n openshift
 oc patch CheCluster devspaces -n openshift-operators --type merge --patch '{"spec":{"components":{"pluginRegistry":{"openVSXURL":"","deployment":{"containers":[{"image":"image-registry.openshift-image-registry.svc:5000/openshift/che-plugin-registry:1.58.X"}]}}}}}'
 ```
+
+Enable User Namespaces in OpenShift:
+
+```bash
+cat << EOF | butane | oc apply -f -
+variant: openshift
+version: 4.12.0
+metadata:
+  labels:
+    machineconfiguration.openshift.io/role: worker
+  name: subuid-subgid
+storage:
+  files:
+  - path: /etc/subuid
+    mode: 0644
+    overwrite: true
+    contents:
+      inline: |
+        core:100000:65536
+        containers:200000:268435456
+  - path: /etc/subgid
+    mode: 0644
+    overwrite: true
+    contents:
+      inline: |
+        core:100000:65536
+        containers:200000:268435456
+EOF
+```
+
+Enable fuse-overlayfs
+
+```bash
+cat << EOF | oc apply -f -
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+ name: fuse-device-plugin-daemonset
+ namespace: kube-system
+spec:
+ selector:
+   matchLabels:
+     name: fuse-device-plugin-ds
+ template:
+   metadata:
+     labels:
+       name: fuse-device-plugin-ds
+   spec:
+     hostNetwork: true
+     containers:
+     - image: soolaugust/fuse-device-plugin:v1.0
+       name: fuse-device-plugin-ctr
+       securityContext:
+         allowPrivilegeEscalation: false
+         capabilities:
+           drop: ["ALL"]
+       volumeMounts:
+         - name: device-plugin
+           mountPath: /var/lib/kubelet/device-plugins
+     volumes:
+       - name: device-plugin
+         hostPath:
+           path: /var/lib/kubelet/device-plugins
+     imagePullSecrets:
+       - name: registry-secret
+EOF
+```
+
+```bash
+apiVersion: v1
+kind: Pod
+metadata:
+ name: podman-userns
+ annotations:
+   io.kubernetes.cri-o.userns-mode: "auto:size=65536;keep-id=true"
+spec:
+ containers:
+   - name: userns
+     image: quay.io/podman/stable
+     command: ["sleep", "10000"]
+     securityContext:
+       capabilities:
+         add:
+           - "SYS_ADMIN"
+           - "MKNOD"
+           - "SYS_CHROOT"
+           - "SETFCAP"
+     resources:
+       limits:
+         github.com/fuse: 1
+```

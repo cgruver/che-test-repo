@@ -21,16 +21,10 @@ components:
     env:
     - name: SHELL
       value: "/bin/zsh"
-    - name: TESTCONTAINERS_RYUK_DISABLED
-      value: "true"
-    - name: TESTCONTAINERS_CHECKS_DISABLE
-      value: "true"
-    - name: DOCKER_HOST
-      value: "tcp://127.0.0.1:2475"
     volumeMounts:
     - name: m2
       path: /home/user/.m2
-- name: quarkus-native-runner
+- name: ubi
   container:
     args:
       - '-f'
@@ -41,87 +35,18 @@ components:
     memoryLimit: 64M
     mountSources: true
     sourceMapping: /projects
-- name: postgres
-  container:
-    image: quay.io/sclorg/postgresql-15-c9s:c9s
-    memoryLimit: 512M
-    sourceMapping: /projects
-    mountSources: true
-    env:
-    - name: POSTGRESQL_USER
-      value: postgres
-    - name: POSTGRESQL_PASSWORD
-      value: postgres
-    - name: POSTGRESQL_DATABASE
-      value: postgres
-    volumeMounts:
-    - name: pgdata
-      path: /var/lib/pgsql/data
 - volume:
     size: 4Gi
   name: projects
 - volume:
     size: 2Gi
   name: m2
-- volume:
-    size: 2Gi
-  name: pgdata
 commands:
 - exec:
-    commandLine: mvn package
-    component: dev-tools
-    group:
-      isDefault: true
-      kind: build
-    workingDir: '${PROJECT_SOURCE}'
-  id: package
-- exec:
-    commandLine: mvn package -Dnative -Dmaven.test.skip -Dquarkus.native.native-image-xmx=2G
-    component: dev-tools
-    group:
-      kind: build
-    label: Package Native
-    workingDir: '${PROJECT_SOURCE}'
-  id: package-native
-- exec:
-    commandLine: 'mvn compile quarkus:dev'
-    component: dev-tools
-    group:
-      isDefault: true
-      kind: run
-    label: Start Development mode (Hot reload + debug)
-    workingDir: '${PROJECT_SOURCE}'
-  id: start-dev
-- exec:
-    commandLine: ./target/code-with-quarkus-1.0.0-SNAPSHOT-runner
-    component: quarkus-native-runner
-    group:
-      kind: run
-    label: Start Native
-    workingDir: '${PROJECT_SOURCE}'
-  id: start-native
-- exec:
-    commandLine: "POD=$(oc get pod --selector controller.devfile.io/devworkspace_name=che-test-workspace -o name) ; oc rsh -c quarkus-native-runner ${POD}"
+    commandLine: "cp /home/user/.kube/config /projects/config"
     component: dev-tools
     group:
       kind: run
-    label: Terminal - Quarkus Native UBI
-    workingDir: '${PROJECT_SOURCE}'
-  id: ubi-shell
-- exec:
-    commandLine: "POD=$(oc get pod --selector controller.devfile.io/devworkspace_name=che-test-workspace -o name) ; oc rsh -c postgres ${POD}"
-    component: dev-tools
-    group:
-      kind: run
-    label: Terminal - PostgreSQL
-    workingDir: '${PROJECT_SOURCE}'
-  id: postgres-shell
-- exec:
-    commandLine: "kubedock server --port-forward"
-    component: dev-tools
-    group:
-      kind: run
-    label: Kubedock
-    workingDir: '${PROJECT_SOURCE}'
-  id: kubedock
-
+    label: Copy Kubeconfig
+    workingDir: '/'
+  id: copy-kubeconfig

@@ -44,7 +44,7 @@ components:
 - name: kafka-cluster
   openshift:
     deployByDefault: true
-    inlined: 
+    inlined: |
       apiVersion: kafka.strimzi.io/v1beta1
       kind: Kafka
       metadata:
@@ -85,7 +85,7 @@ components:
 - name: kafka-topic
   openshift:
     deployByDefault: true
-    inlined: 
+    inlined: |
       apiVersion: kafka.strimzi.io/v1beta1
       kind: KafkaTopic
       metadata:

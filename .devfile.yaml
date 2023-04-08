@@ -108,3 +108,15 @@ commands:
     label: Copy Kubeconfig
     workingDir: '/'
   id: copy-kubeconfig
+- apply:
+    component: kafka-cluster
+    group:
+      kind: deploy
+    label: deploy-kafka-cluster
+  id: kafka-cluster
+- apply:
+    component: kafka-topic
+    group:
+      kind: deploy
+    label: kafka-topic
+  id: kafka-topic

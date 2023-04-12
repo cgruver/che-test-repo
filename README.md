@@ -93,6 +93,7 @@ EOF
 ```
 
 ```bash
+cat << EOF | oc apply -f -
 apiVersion: v1
 kind: Pod
 metadata:
@@ -105,6 +106,10 @@ spec:
      image: quay.io/podman/stable
      command: ["sleep", "10000"]
      securityContext:
+       allowPrivilegeEscalation: false
+       runAsNonRoot: true
+       seccompProfile:
+         type: RuntimeDefault
        capabilities:
          add:
            - "SYS_ADMIN"
@@ -114,4 +119,34 @@ spec:
      resources:
        limits:
          github.com/fuse: 1
+EOF
 ```
+
+```bash
+cat << EOF | oc apply -f -
+apiVersion: v1
+kind: Pod
+metadata:
+ name: podman-userns
+ annotations:
+   io.kubernetes.cri-o.userns-mode: "auto:size=65536;keep-id=true"
+spec:
+ containers:
+   - name: userns
+     image: quay.io/podman/stable
+     command: ["sleep", "10000"]
+     securityContext:
+       seccompProfile:
+         type: RuntimeDefault
+       capabilities:
+         add:
+           - "SYS_ADMIN"
+           - "MKNOD"
+           - "SYS_CHROOT"
+           - "SETFCAP"
+     resources:
+       limits:
+         github.com/fuse: 1
+EOF
+```
+

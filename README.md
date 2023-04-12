@@ -150,7 +150,8 @@ spec:
 EOF
 ```
 
-```yaml
+```bash
+cat << EOF | oc apply -f -
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -176,5 +177,6 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: devworkspace-controller-serviceaccount
-  namespace: dw # Or wherever the DevWorkspace Operator is installed
+  namespace: openshift-operators
+EOF
 ```

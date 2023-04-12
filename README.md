@@ -150,3 +150,31 @@ spec:
 EOF
 ```
 
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: devworkspace-controller-admin-kafka
+rules:
+- apiGroups:
+  - kafka.strimzi.io
+  resources:
+  - kafkas
+  - kafkatopics
+  verbs:
+  - "*"
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+  name: devworkspace-controller-admin-kafka
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: devworkspace-controller-admin-kafka
+subjects:
+- kind: ServiceAccount
+  name: devworkspace-controller-serviceaccount
+  namespace: dw # Or wherever the DevWorkspace Operator is installed
+```

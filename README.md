@@ -133,7 +133,7 @@ metadata:
 spec:
  containers:
    - name: userns
-     image: quay.io/podman/stable
+     image: quay.io/cgruver0/che/podman-basic:latest
      command: ["sleep", "10000"]
      securityContext:
        seccompProfile:
@@ -148,6 +148,21 @@ spec:
        limits:
          github.com/fuse: 1
 EOF
+```
+
+```bash
+echo "user:x:$(id -u):0:user user:${HOME}:/bin/bash" >> /etc/passwd
+
+cat << EOF > containers.conf                              
+[containers]
+netns="host"
+ipcns="host"
+default_sysctls = [] # Workaround
+EOF
+
+podman system migrate
+
+podman run registry.access.redhat.com/ubi9/ubi-minimal echo hello
 ```
 
 ```bash

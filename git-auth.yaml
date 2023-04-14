@@ -2,6 +2,7 @@ kind: Secret
 apiVersion: v1
 metadata:
   name: personal-access-token-${CHE_USER}
+  namespace: ${CHE_NAMESPACE}
   labels:
     app.kubernetes.io/component: scm-personal-access-token
     app.kubernetes.io/part-of: che.eclipse.org

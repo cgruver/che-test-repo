@@ -123,8 +123,8 @@ components:
     - name: KUBECONFIG
       value: /projects/config
 - name: dev-tools
-  # attributes:
-  #   controller.devfile.io/merge-contribution: true
+  attributes:
+    controller.devfile.io/merge-contribution: true
   container: 
     image: quay.io/cgruver0/che/che-demo-app:latest
     memoryRequest: 1Gi

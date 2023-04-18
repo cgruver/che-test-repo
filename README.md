@@ -195,3 +195,34 @@ subjects:
   namespace: openshift-operators
 EOF
 ```
+
+```bash
+ECLIPSE_CHE_NAMESPACE=eclipse-che
+OPERATOR_NAMESPACE=eclipse-che
+CHE_CLUSTER_NAME=eclipse-che
+CUSTOM_ROLES_NAME=edit
+
+oc apply -f - <<EOF
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: che-ns-edit
+  labels:
+    app.kubernetes.io/part-of: che.eclipse.org
+subjects:
+  - kind: ServiceAccount
+    name: che-operator
+    namespace: openshift-operators
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: edit
+EOF
+
+oc patch checluster/eclipse-che --patch '{"spec": {"components": {"cheServer": {"clusterRoles": ["edit"]}}}}' --type=merge -n eclipse-che
+
+# ${ECLIPSE_CHE_NAMESPACE}-cheworkspaces-clusterrole and ${ECLIPSE_CHE_NAMESPACE}-cheworkspaces-devworkspace-clusterrole are defaults user's clusterrole
+USER_CLUSTER_ROLES="edit,eclipse-che-cheworkspaces-clusterrole,eclipse-che-cheworkspaces-devworkspace-clusterrole"
+
+oc patch checluster/eclipse-che --patch '{"spec": {"components": {"cheServer": {"extraProperties": {"CHE_INFRA_KUBERNETES_USER__CLUSTER__ROLES": "'${USER_CLUSTER_ROLES}'"}}}}}' --type=merge -n eclipse-che
+```

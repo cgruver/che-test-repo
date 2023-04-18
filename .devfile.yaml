@@ -28,6 +28,11 @@ projects:
 components:
 - name: dev-tools
   container: 
+    args:
+      - '-f'
+      - /dev/null
+    command:
+      - tail
     image: quay.io/cgruver0/che/che-demo-app:test
     memoryRequest: 1Gi
     memoryLimit: 6Gi

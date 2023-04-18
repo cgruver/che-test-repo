@@ -43,7 +43,6 @@ components:
   name: m2
 - name: kafka-cluster
   openshift:
-    deployByDefault: true
     inlined: |
       apiVersion: kafka.strimzi.io/v1beta2
       kind: Kafka
@@ -84,7 +83,6 @@ components:
           replicas: 1
 - name: kafka-topic
   openshift:
-    deployByDefault: true
     inlined: |
       apiVersion: kafka.strimzi.io/v1beta2
       kind: KafkaTopic

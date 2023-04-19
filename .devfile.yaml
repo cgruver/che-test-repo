@@ -137,9 +137,6 @@ components:
         targetPort: 5432
 - name: oc-cli
   container:
-    args:
-      - '-f'
-      - /dev/null
     command: ["mkdir -p /projects/bin && cp /usr/bin/oc /projects/bin/oc && cp /usr/bin/kubectl /projects/bin/kubectl"]
     image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
     sourceMapping: /projects

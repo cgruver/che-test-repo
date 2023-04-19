@@ -138,10 +138,11 @@ components:
 - name: oc-cli
   container:
     args:
-      - '-f'
-      - /dev/null
+      - '-c'
+      - >-
+        mkdir -p /projects/bin && cp /usr/bin/oc /projects/bin/oc && cp /usr/bin/kubectl /projects/bin/kubectl
     command:
-      - tail
+      - /bin/bash
     image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
     sourceMapping: /projects
     mountSources: true
@@ -216,17 +217,15 @@ commands:
   id: copy-kubeconfig
 - exec:
     commandLine: "/projects/che-demo-app/setUiEnv.sh -f=/projects/che-demo-app-ui/src/environments/environment.development.ts -s=/projects/che-demo-app-ui/env.dev -c=quarkus-runner -w=che-demo-app -p=8080 -e=https-quarkus -v=backendApiUrl"
-    component: oc-cli
+    component: dev-tools
     group:
       kind: run
     label: Set Angular Environment
     workingDir: '/'
   id: set-ui-env
-- exec:
-    commandLine: "mkdir -p /projects/bin && cp /usr/bin/oc /projects/bin/oc && cp /usr/bin/kubectl /projects/bin/kubectl"
+- apply:
     component: oc-cli
     label: Copy OpenShift CLI
-    workingDir: '/'
   id: cp-oc-cli
 events:
   preStart:

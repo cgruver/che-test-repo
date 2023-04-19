@@ -215,7 +215,7 @@ commands:
   id: copy-kubeconfig
 - exec:
     commandLine: "/projects/che-demo-app/setUiEnv.sh -f=/projects/che-demo-app-ui/src/environments/environment.development.ts -s=/projects/che-demo-app-ui/env.dev -c=quarkus-runner -w=che-demo-app -p=8080 -e=https-quarkus -v=backendApiUrl"
-    component: oc-cli
+    component: dev-tools
     group:
       kind: run
     label: Set Angular Environment

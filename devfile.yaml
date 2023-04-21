@@ -28,7 +28,7 @@ projects:
 components:
 - name: dev-tools
   container: 
-    image: quay.io/cgruver0/che/che-demo-app:test
+    image: quay.io/cgruver0/che/che-demo-app:latest
     memoryRequest: 1Gi
     memoryLimit: 6Gi
     cpuRequest: 500m
@@ -55,7 +55,7 @@ components:
         exposure: none
 - name: quarkus-runner
   container: 
-    image: quay.io/cgruver0/che/che-demo-app:test
+    image: quay.io/cgruver0/che/che-demo-app:latest
     memoryLimit: 1Gi
     mountSources: true
     sourceMapping: /projects
@@ -99,7 +99,7 @@ components:
       - tail
 - name: node-runner
   container: 
-    image: quay.io/cgruver0/che/che-demo-app:test
+    image: quay.io/cgruver0/che/che-demo-app:latest
     memoryLimit: 1Gi
     mountSources: true
     sourceMapping: /projects
@@ -147,22 +147,6 @@ components:
     sourceMapping: /projects
     mountSources: true
     memoryLimit: 64M
-# - name: dev-tools-init
-#   container: 
-#     image: quay.io/cgruver0/che/che-demo-app:latest
-#     memoryLimit: 256Mi
-#     mountSources: true
-#     sourceMapping: /projects
-#     args:
-#       - '-f=/projects/che-demo-app-ui/src/environments/environment.development.ts'
-#       - '-s=/projects/che-demo-app-ui/env.dev'
-#       - '-c=quarkus-runner'
-#       - '-w=che-demo-app'
-#       - '-p=8080'
-#       - '-e=https-quarkus'
-#       - '-v=backendApiUrl'
-#     command:
-#       - /projects/che-demo-app/setUiEnv.sh    
 - volume:
     size: 4Gi
   name: projects
@@ -203,7 +187,7 @@ commands:
     workingDir: '/projects/che-demo-app-service'
   id: quarkus-dev-mode
 - exec:
-    commandLine: '/projects/che-demo-app/setUiEnv.sh -f=/projects/che-demo-app-ui/src/environments/environment.development.ts -s=/projects/che-demo-app-ui/env.dev -c=quarkus-runner -w=che-demo-app -p=8080 -e=https-quarkus -v=backendApiUrl && ng serve --disable-host-check --host 0.0.0.0'
+    commandLine: '/projects/che-demo-app/setUiEnv.sh -f=/projects/che-demo-app-ui/src/environments/environment.development.ts -s=/projects/che-demo-app-ui/env.dev -c=quarkus-runner -w=che-demo-app -p=8080 -e=https-quarkus -v=backendApiUrl && npm install && ng serve --disable-host-check --host 0.0.0.0'
     component: node-runner
     hotReloadCapable: true
     group:
@@ -220,22 +204,6 @@ commands:
     label: Kubedock
     workingDir: '/'
   id: kubedock
-- exec:
-    commandLine: "cp /home/user/.kube/config /projects/config"
-    component: dev-tools
-    group:
-      kind: run
-    label: Copy Kubeconfig
-    workingDir: '/'
-  id: copy-kubeconfig
-- exec:
-    commandLine: "KUBECONFIG=/home/user/.kube/config /projects/che-demo-app/setUiEnv.sh -f=/projects/che-demo-app-ui/src/environments/environment.development.ts -s=/projects/che-demo-app-ui/env.dev -c=quarkus-runner -w=che-demo-app -p=8080 -e=https-quarkus -v=backendApiUrl > /projects/test.out 2>&1"
-    component: dev-tools
-    group:
-      kind: run
-    label: Set Angular Environment
-    workingDir: '/'
-  id: set-ui-env
 - apply:
     component: oc-cli
     label: Copy OpenShift CLI
@@ -243,5 +211,3 @@ commands:
 events:
   preStart:
     - cp-oc-cli
-  postStart:
-    - set-ui-env

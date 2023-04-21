@@ -240,12 +240,8 @@ commands:
     component: oc-cli
     label: Copy OpenShift CLI
   id: cp-oc-cli
-- apply:
-    component: dev-tools-init
-    label: Init UI Env
-  id: init-ui-env
 events:
   preStart:
     - cp-oc-cli
   postStart:
-    - init-ui-env
+    - set-ui-env

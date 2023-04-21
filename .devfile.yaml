@@ -2,7 +2,7 @@ schemaVersion: 2.2.0
 attributes:
   controller.devfile.io/storage-type: per-workspace
 metadata:
-  name: test-events
+  name: che-demo-app
 projects:
 - name: che-demo-app
   git:

@@ -147,22 +147,22 @@ components:
     sourceMapping: /projects
     mountSources: true
     memoryLimit: 64M
-- name: dev-tools-init
-  container: 
-    image: quay.io/cgruver0/che/che-demo-app:latest
-    memoryLimit: 256Mi
-    mountSources: true
-    sourceMapping: /projects
-    args:
-      - '-f=/projects/che-demo-app-ui/src/environments/environment.development.ts'
-      - '-s=/projects/che-demo-app-ui/env.dev'
-      - '-c=quarkus-runner'
-      - '-w=che-demo-app'
-      - '-p=8080'
-      - '-e=https-quarkus'
-      - '-v=backendApiUrl'
-    command:
-      - /projects/che-demo-app/setUiEnv.sh    
+# - name: dev-tools-init
+#   container: 
+#     image: quay.io/cgruver0/che/che-demo-app:latest
+#     memoryLimit: 256Mi
+#     mountSources: true
+#     sourceMapping: /projects
+#     args:
+#       - '-f=/projects/che-demo-app-ui/src/environments/environment.development.ts'
+#       - '-s=/projects/che-demo-app-ui/env.dev'
+#       - '-c=quarkus-runner'
+#       - '-w=che-demo-app'
+#       - '-p=8080'
+#       - '-e=https-quarkus'
+#       - '-v=backendApiUrl'
+#     command:
+#       - /projects/che-demo-app/setUiEnv.sh    
 - volume:
     size: 4Gi
   name: projects
@@ -247,4 +247,5 @@ commands:
 events:
   preStart:
     - cp-oc-cli
+  postStart:
     - init-ui-env

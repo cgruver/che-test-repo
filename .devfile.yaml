@@ -53,6 +53,11 @@ components:
       - name: kubedock
         targetPort: 2475
         exposure: none
+    args:
+      - '-f'
+      - /dev/null
+    command:
+      - tail
 - name: quarkus-runner
   container: 
     image: quay.io/cgruver0/che/che-demo-app:test

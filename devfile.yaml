@@ -8,21 +8,21 @@ projects:
   git:
     checkoutFrom:
       remote: origin
-      revision: main
+      revision: devfile-test
     remotes:
       origin: https://github.com/eclipse-che-demo-app/che-demo-app.git
 - name: che-demo-app-ui
   git:
     checkoutFrom:
       remote: origin
-      revision: main
+      revision: devfile-test
     remotes:
       origin: https://github.com/eclipse-che-demo-app/che-demo-app-ui.git
 - name: che-demo-app-service
   git:
     checkoutFrom:
       remote: origin
-      revision: main
+      revision: devfile-test
     remotes:
       origin: https://github.com/eclipse-che-demo-app/che-demo-app-service.git
 components:
@@ -187,7 +187,7 @@ commands:
     workingDir: '/projects/che-demo-app-service'
   id: quarkus-dev-mode
 - exec:
-    commandLine: '/projects/che-demo-app/setUiEnv.sh -f=/projects/che-demo-app-ui/src/environments/environment.development.ts -s=/projects/che-demo-app-ui/env.dev -c=quarkus-runner -w=che-demo-app -p=8080 -e=https-quarkus -v=backendApiUrl && npm install && ng serve --disable-host-check --host 0.0.0.0'
+    commandLine: '/projects/che-demo-app/setUiEnv.sh -f=/projects/che-demo-app-ui/src/environments/environment.development.ts -s=/projects/che-demo-app-ui/env.dev -c=quarkus-runner -p=8080 -e=https-quarkus -v=backendApiUrl && npm install && ng serve --disable-host-check --host 0.0.0.0'
     component: node-runner
     hotReloadCapable: true
     group:

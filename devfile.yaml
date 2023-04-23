@@ -28,7 +28,7 @@ projects:
 components:
 - name: dev-tools
   container: 
-    image: quay.io/cgruver0/che/che-demo-app:latest
+    image: quay.io/cgruver0/che/che-demo-app:test
     memoryRequest: 1Gi
     memoryLimit: 6Gi
     cpuRequest: 500m
@@ -55,7 +55,7 @@ components:
         exposure: none
 - name: quarkus-runner
   container: 
-    image: quay.io/cgruver0/che/che-demo-app:latest
+    image: quay.io/cgruver0/che/che-demo-app:test
     memoryLimit: 1Gi
     mountSources: true
     sourceMapping: /projects
@@ -99,7 +99,7 @@ components:
       - tail
 - name: node-runner
   container: 
-    image: quay.io/cgruver0/che/che-demo-app:latest
+    image: quay.io/cgruver0/che/che-demo-app:test
     memoryLimit: 1Gi
     mountSources: true
     sourceMapping: /projects

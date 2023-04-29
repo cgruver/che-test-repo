@@ -49,6 +49,8 @@ components:
       path: /home/user/.m2
     - name: npm
       path: /home/user/.npm
+    - name: github-creds
+      path: /home/user/.config/gh
     endpoints:
       - name: kubedock
         targetPort: 2475
@@ -160,6 +162,9 @@ components:
 - volume:
     size: 2Gi
   name: pgdata
+- volume:
+    size: 10Mi
+  name: github-creds
 commands:
 - exec:
     commandLine: mvn package
@@ -205,6 +210,14 @@ commands:
     label: Kubedock
     workingDir: '/'
   id: kubedock
+- exec:
+    commandLine: "gh auth login -h https://github.com -p https -w"
+    component: dev-tools
+    group:
+      kind: run
+    label: Github Authentication
+    workingDir: '/home/user'
+  id: github-auth
 - apply:
     component: oc-cli
     label: Copy OpenShift CLI

@@ -28,9 +28,11 @@ projects:
 components:
 - name: dev-tools
   container: 
-    image: quay.io/cgruver0/che/che-demo-app:test
+    image: quay.io/cgruver0/che/che-demo-app:latest
     memoryRequest: 1Gi
     memoryLimit: 6Gi
+    cpuRequest: 500m
+    cpuLimit: 2000m
     mountSources: true
     sourceMapping: /projects
     env:
@@ -42,20 +44,21 @@ components:
       value: "true"
     - name: DOCKER_HOST
       value: "tcp://127.0.0.1:2475"
+    - name: VSCODE_DEFAULT_WORKSPACE
+      value: "/projects/che-demo-app/che-demo.code-workspace"
     volumeMounts:
     - name: m2
       path: /home/user/.m2
     - name: npm
       path: /home/user/.npm
-    - name: github-creds
-      path: /home/user/.config/gh
     endpoints:
       - name: kubedock
         targetPort: 2475
         exposure: none
 - name: quarkus-runner
   container: 
-    image: quay.io/cgruver0/che/che-demo-app:test
+    image: quay.io/cgruver0/che/che-demo-app:latest
+    memoryRequest: 128M
     memoryLimit: 1Gi
     mountSources: true
     sourceMapping: /projects
@@ -99,7 +102,8 @@ components:
       - tail
 - name: node-runner
   container: 
-    image: quay.io/cgruver0/che/che-demo-app:test
+    image: quay.io/cgruver0/che/che-demo-app:latest
+    memoryRequest: 128M
     memoryLimit: 1Gi
     mountSources: true
     sourceMapping: /projects
@@ -119,6 +123,7 @@ components:
 - name: postgres
   container:
     image: quay.io/sclorg/postgresql-15-c9s:c9s
+    memoryRequest: 128M
     memoryLimit: 512M
     sourceMapping: /projects
     mountSources: true
@@ -141,13 +146,17 @@ components:
     args:
       - '-c'
       - >-
-        mkdir -p /projects/bin && cp /usr/bin/oc /projects/bin/oc && cp /usr/bin/kubectl /projects/bin/kubectl
+        mkdir -p /projects/bin ; \
+        ROUTE=$(oc get route downloads -n openshift-console -o jsonpath={.spec.host}) ; \
+        curl -o /projects/bin/oc.tar https://${ROUTE}/amd64/linux/oc.tar ; \
+        tar -xvf /projects/bin/oc.tar -C /projects/bin/
     command:
       - /bin/bash
     image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
     sourceMapping: /projects
     mountSources: true
-    memoryLimit: 64M
+    memoryRequest: 128M
+    memoryLimit: 256M
 - volume:
     size: 4Gi
   name: projects
@@ -160,19 +169,6 @@ components:
 - volume:
     size: 2Gi
   name: pgdata
-- volume:
-    size: 10Mi
-  name: github-creds
-- openshift:
-    deployByDefault: true
-    inlined: |
-      kind: ConfigMap
-      apiVersion: v1
-      metadata:
-        name: test-config
-      data:
-        test: "value"
-  name: config-map
 commands:
 - exec:
     commandLine: mvn package
@@ -218,14 +214,6 @@ commands:
     label: Kubedock
     workingDir: '/'
   id: kubedock
-- exec:
-    commandLine: "gh auth login -h github.com -p https -w"
-    component: dev-tools
-    group:
-      kind: run
-    label: Github Authentication
-    workingDir: '/home/user'
-  id: github-auth
 - apply:
     component: oc-cli
     label: Copy OpenShift CLI

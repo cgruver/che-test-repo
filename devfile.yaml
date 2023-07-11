@@ -24,11 +24,9 @@ components:
       metadata:
         name: localstack
         labels:
-          helm.sh/chart: localstack-0.6.0
           app.kubernetes.io/name: localstack
           app.kubernetes.io/instance: localstack
         annotations:
-          
       spec:
         replicas: 1
         strategy:
@@ -43,7 +41,6 @@ components:
               app.kubernetes.io/name: localstack
               app.kubernetes.io/instance: localstack
           spec:
-            serviceAccountName: default
             securityContext:
               {}
             containers:
@@ -256,11 +253,9 @@ components:
       metadata:
         name: localstack
         labels:
-          helm.sh/chart: localstack-0.6.0
           app.kubernetes.io/name: localstack
           app.kubernetes.io/instance: localstack
         annotations:
-          
       spec:
         type: ClusterIP
         ports:

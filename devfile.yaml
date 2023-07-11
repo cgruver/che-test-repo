@@ -4,6 +4,9 @@ metadata:
   projectType: LocalStack
   displayName: LocalStack
 components:
+  - name: aws-localstack
+    container: 
+      image: public.ecr.aws/localstack/localstack
   - name: localstack
     attributes:
       deployment/replicas: 1
@@ -11,6 +14,7 @@ components:
       deployment/memoryRequest: 50Mi
       deployment/container-port: 4566
     kubernetes:
+      deployByDefault: true
       uri: deploy.k8s.yaml
       endpoints:
       - name: http-4566

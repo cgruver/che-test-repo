@@ -13,7 +13,7 @@ components:
       deployment/cpuRequest: 10m
       deployment/memoryRequest: 50Mi
       deployment/container-port: 4566
-    kubernetes:
+    openshift:
       deployByDefault: true
       uri: deploy.k8s.yaml
       endpoints:

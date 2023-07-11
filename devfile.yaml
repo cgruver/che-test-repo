@@ -7,27 +7,44 @@ components:
   - name: aws-localstack
     container: 
       image: public.ecr.aws/localstack/localstack
-  - name: localstack
-    attributes:
-      deployment/replicas: 1
-      deployment/cpuRequest: 10m
-      deployment/memoryRequest: 50Mi
-      deployment/container-port: 4566
+  - name: localstack-deployment
     openshift:
       deployByDefault: true
-      uri: deploy.k8s.yaml
-      endpoints:
-      - name: http-4566
-        targetPort: 4566
-        path: /
-commands:
-  - id: start-localstack
-    apply:
-      component: localstack
-  - id: deploy
-    composite:
-      commands:
-        - start-localstack
-      group:
-        kind: deploy
-        isDefault: true
+      inlined: |
+        kind: Deployment
+        apiVersion: apps/v1
+        metadata:
+          name: localstack-app
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              app: localstack-app
+          template:
+            metadata:
+              labels:
+                app: localstack-app
+            spec:
+              containers:
+                - name: localstack
+                  image: public.ecr.aws/localstack/localstack
+                  ports:
+                    - name: http
+                      containerPort: 4566
+                      protocol: TCP
+  - name: localstack-service
+    openshift:
+      deployByDefault: true
+      inlined: |
+        kind: Service
+        apiVersion: v1
+        metadata:
+          name: localstack-app
+        spec:
+        ports:
+          - name: http-4566
+            port: 4566
+            protocol: TCP
+            targetPort: 4566
+        selector:
+          app: localstack-app

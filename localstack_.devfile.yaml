@@ -6,7 +6,7 @@ metadata:
 components:
 - name: ide
   container: 
-    image: nexus-docker-dev.enterprise-tools.aws.delta.com/com/delta/dx/ddxi:latest
+    image: quay.io/cgruver0/che/che-dev-image:latest
     mountSources: true
     sourceMapping: /projects
     env:
@@ -50,7 +50,7 @@ components:
               - name: localstack
                 securityContext:
                   {}
-                image: "localstack/localstack:latest"
+                image: "image-registry.openshift-image-registry.svc:5000/openshift/localstack:latest"
                 imagePullPolicy: IfNotPresent
                 ports:
                   - name: edge

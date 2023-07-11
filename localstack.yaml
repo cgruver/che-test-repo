@@ -223,6 +223,7 @@ spec:
               value: "60"
             - name: OVERRIDE_IN_DOCKER
               value: "1"
+---
 apiVersion: v1
 kind: Service
 metadata:

@@ -24,8 +24,7 @@ components:
       metadata:
         name: localstack
         labels:
-          app.kubernetes.io/name: localstack
-          app.kubernetes.io/instance: localstack
+          app: localstack
         annotations:
       spec:
         replicas: 1
@@ -33,13 +32,11 @@ components:
           type: RollingUpdate
         selector:
           matchLabels:
-            app.kubernetes.io/name: localstack
-            app.kubernetes.io/instance: localstack
+            app: localstack
         template:
           metadata:
             labels:
-              app.kubernetes.io/name: localstack
-              app.kubernetes.io/instance: localstack
+              app: localstack
           spec:
             securityContext:
               {}
@@ -253,11 +250,8 @@ components:
       metadata:
         name: localstack
         labels:
-          helm.sh/chart: localstack-0.6.0
-          app.kubernetes.io/name: localstack
-          app.kubernetes.io/instance: localstack
+          app: localstack
         annotations:
-          
       spec:
         type: ClusterIP
         ports:
@@ -415,5 +409,5 @@ components:
             port: 4559
             targetPort: "ext-svc-4559"
         selector:
-          app.kubernetes.io/name: localstack
-          app.kubernetes.io/instance: localstack
+          app: localstack
+          

@@ -1,0 +1,38 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: localstack-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: localstack-app
+  template:
+    metadata:
+      labels:
+        app: localstack-app
+    spec:
+      containers:
+        - name: localstack
+          image: public.ecr.aws/localstack/localstack
+          ports:
+            - name: http
+              containerPort: 4566
+              protocol: TCP
+          # resources:
+          #   requests:
+          #     memory: "200Mi"
+          #     cpu: "10m"
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: localstack-app
+spec:
+ports:
+  - name: http-4566
+    port: 4566
+    protocol: TCP
+    targetPort: 4566
+selector:
+  app: localstack-app

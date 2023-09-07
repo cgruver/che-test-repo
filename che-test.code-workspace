@@ -2,18 +2,24 @@
 	"folders": [
 		{
 			"path": "."
+		},
+		{
+			"path": "../sno-quickstarts"
+		},
+		{
+			"path": "../external-secrets-manager"
 		}
 	],
 	"extensions": {
 		"recommendations": [
 			"redhat.vscode-yaml",
-			"redhat.java",
-			"redhat.vscode-quarkus",
 			"redhat.vscode-openshift-connector",
+            "redhat.ansible",
 			"mhutchie.git-graph",
 			"eamodio.gitlens",
 			"streetsidesoftware.code-spell-checker",
 			"johnpapa.winteriscoming",
+			"cnshenj.vscode-task-manager",
 			"cnshenj.vscode-task-manager"
 		]
 	},

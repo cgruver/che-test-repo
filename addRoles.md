@@ -1,4 +1,4 @@
-# Add Customer Roles to Users
+# Add Custom Roles to Eclipse Che Users
 
 ```bash
 cat << EOF | oc apply -f -
